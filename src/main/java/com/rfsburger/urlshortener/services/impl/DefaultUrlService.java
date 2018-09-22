@@ -1,6 +1,9 @@
 package com.rfsburger.urlshortener.services.impl;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.rfsburger.urlshortener.daos.UrlDao;
@@ -10,10 +13,18 @@ import com.rfsburger.urlshortener.services.UrlService;
 public class DefaultUrlService implements UrlService {
 
     @Autowired
+    @Qualifier(value = "urlFileDao")
     private UrlDao urlDao;
 
     @Override
-    public String getLongUrl(String shortUrl) {
+    public Optional<String> getLongUrl(String shortUrl) {
         return urlDao.getLongUrl(shortUrl);
     }
+
+    @Override
+    public String getOrCreateShortUrl(String longUrl) {
+        return urlDao.getOrCreateShortUrl(longUrl);
+    }
+
+
 }
