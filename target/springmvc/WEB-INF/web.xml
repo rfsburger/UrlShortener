@@ -1,0 +1,35 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+	      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+    <display-name>springmvcstorefront</display-name>
+
+
+    <servlet>
+        <description>
+            DispatcherServlet
+            Spring MVC dispatcher servlet. This is the entry point for the Spring MVC application.
+        </description>
+        <servlet-name>DispatcherServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <description>
+                Specifies the location for Spring MVC to load an additional XML configuration file.
+                Because hybris is already configured with the XML spring configuration files to load
+                we must set this param value to EMPTY in order to prevent loading of the default
+                /WEB-INF/applicationContext.xml file.
+            </description>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/config/spring-mvc-config.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DispatcherServlet</servlet-name>
+        <!-- Map all requests to the DispatcherServlet -->
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+</web-app>
