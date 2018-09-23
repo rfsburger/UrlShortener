@@ -13,7 +13,7 @@ import com.rfsburger.urlshortener.services.UrlService;
 public class DefaultUrlService implements UrlService {
 
     @Autowired
-    @Qualifier(value = "urlFileDao")
+    @Qualifier(value = "urlSqlDao")
     private UrlDao urlDao;
 
     @Override

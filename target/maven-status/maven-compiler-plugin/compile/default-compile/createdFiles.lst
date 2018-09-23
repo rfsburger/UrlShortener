@@ -1,6 +1,6 @@
-com/rfsburger/urlshortener/controllers/UrlController.class
 com/rfsburger/urlshortener/daos/UrlDao.class
-com/rfsburger/urlshortener/services/impl/DefaultUrlService.class
 com/rfsburger/urlshortener/daos/impl/UrlFileDao.class
 com/rfsburger/urlshortener/services/UrlService.class
+com/rfsburger/urlshortener/controllers/UrlController.class
+com/rfsburger/urlshortener/services/impl/DefaultUrlService.class
 com/rfsburger/urlshortener/daos/impl/UrlSqlDao.class

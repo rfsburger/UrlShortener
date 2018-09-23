@@ -16,14 +16,16 @@ import com.rfsburger.urlshortener.services.UrlService;
 @Controller
 public class UrlController {
 
+    public static final String SHORT = "/short";
+
     @Autowired
     private UrlService urlService;
 
-    @RequestMapping(value = "/short", method = RequestMethod.GET)
+    @RequestMapping(value = SHORT, method = RequestMethod.GET)
     public String getLongUrl(@RequestParam String shrt, final Model model) {
         Optional<String> longUrl = urlService.getLongUrl(shrt);
         if (longUrl.isPresent()) {
-            return "redirect:" +longUrl.get();
+            return "redirect:" + longUrl.get();
         } else {
             model.addAttribute("shortUrl", shrt);
             return "error";
@@ -31,9 +33,15 @@ public class UrlController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
+    public String getMainPage() {
+        return "main";
+    }
+
+
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
     public String createShortUrl(@RequestParam String longUrl, final Model model, final HttpServletRequest request) {
         if (validateUrl(longUrl)) {
-            model.addAttribute("shortUrl", request.getRequestURL() + urlService.getOrCreateShortUrl(longUrl));
+            model.addAttribute("shortUrl", getShortenedUrl(longUrl, request));
             return "shorturl";
         } else {
             model.addAttribute("longUrl", longUrl);
@@ -41,8 +49,17 @@ public class UrlController {
         }
     }
 
+    private String getShortenedUrl(@RequestParam String longUrl, HttpServletRequest request) {
+        return getBaseUrl(request) + SHORT.substring(1) + "?shrt=" + urlService.getOrCreateShortUrl(longUrl);
+    }
+
+    private String getBaseUrl(HttpServletRequest request) {
+        String url = request.getRequestURL().toString();
+        return url.substring(0, url.length() - request.getRequestURI().length()) + request.getContextPath() + "/";
+    }
+
     private boolean validateUrl(String longUrl) {
-        String[] schemes = {"http","https"};
+        String[] schemes = {"http", "https"};
         UrlValidator urlValidator = new UrlValidator(schemes);
         return (urlValidator.isValid(longUrl));
     }

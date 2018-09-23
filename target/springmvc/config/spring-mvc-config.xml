@@ -4,15 +4,20 @@
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <context:annotation-config/>
     <mvc:annotation-driven/>
     <context:component-scan
             base-package="com.rfsburger.urlshortener"/>
+
+    <tx:annotation-driven transaction-manager="tjtJTransactionManager" />
+
+
+    <context:property-placeholder location="WEB-INF/config/app.properties" />
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" p:prefix="/WEB-INF/views/pages/"
           p:suffix=".jsp"/>
@@ -20,10 +25,20 @@
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
           destroy-method="close">
         <property name="driverClassName" value="com.mysql.jdbc.Driver" />
-        <property name="url" value="jdbc:mysql://localhost:3306/UrlShortener" />
-        <property name="username" value="root" />
-        <property name="password" value="root" />
+        <property name="url" value="jdbc:mysql://${databaseUrl}" />
+        <property name="username" value="${databaseUsername}" />
+        <property name="password" value="${databasePassword}" />
         <property name="defaultAutoCommit" value="false" />
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+        <constructor-arg type="javax.sql.DataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="tjtJTransactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+          scope="singleton">
+        <property name="dataSource" ref="dataSource" />
     </bean>
 
 </beans>
